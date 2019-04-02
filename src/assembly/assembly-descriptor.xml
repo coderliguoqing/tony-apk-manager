@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>bin</id>
+    <!-- 最终打包成一个用于发布的zip文件 -->
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+        <!-- 打包jar文件 -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <!-- 把项目相关的启动脚本，打包进zip文件的bin目录 -->
+        <fileSet>
+            <directory>${project.basedir}/src/main/scripts</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+
+        <!-- 把项目的配置文件，打包进zip文件的config目录 -->
+        <fileSet>
+            <directory>${project.build.directory}/classes</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>*.xml</include>
+                <include>*.yml</include>
+                <include>*.json</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <!-- 把项目的依赖的jar打包到lib目录下 -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <scope>runtime</scope>
+            <excludes>
+                <exclude>${groupId}:${artifactId}</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+</assembly>

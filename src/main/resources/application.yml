@@ -1,0 +1,55 @@
+#服务启动提供的访问端口
+server:
+  port: 8081
+  
+#服务应用名
+spring:
+  application:
+    name: tony-apk-manager
+  #redis相关配置
+  redis:
+    host: 192.168.234.33
+    port: 56379
+    database: 0
+    timeout: 0
+    password: Mon56BuEcXzZ
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+  session:
+    store-type: none
+  #mybatis数据源连接池相关配置
+  datasource:
+    url: jdbc:mysql://192.168.240.29:8096/bm_market?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    username: BlueMoon
+    password: bm.mall.123
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      max-active: 20
+      initial-size: 5
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      filters: stat,wall,logback
+    
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml
+  
+rest:
+  auth-open: true
+  sign-open: true
+  
+jwt:
+  header: Authorization
+  secret: mySecret
+  md5-key: randomKey
+  expiration: 604800
+  

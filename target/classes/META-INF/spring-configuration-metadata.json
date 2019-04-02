@@ -1,0 +1,37 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt",
+      "type": "com.tony.admin.web.common.security.TokenUtil"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt.auth-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt.expiration",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt.header",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt.md5-key",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tony.admin.web.common.security.TokenUtil",
+      "name": "jwt.secret",
+      "type": "java.lang.String"
+    }
+  ]
+}
