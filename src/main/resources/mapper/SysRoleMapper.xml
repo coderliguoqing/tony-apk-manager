@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tony.admin.web.mapper.SysRoleMapper">
+<mapper namespace="com.tony.admin.web.sys.mapper.SysRoleMapper">
 
     <sql id="selectColumns">
         SELECT
@@ -14,7 +14,7 @@
         FROM sys_role a
     </sql>
 
-    <select id="findListByUserId" resultType="com.tony.admin.web.model.SysRole">
+    <select id="findListByUserId" resultType="com.tony.admin.web.sys.model.SysRole">
         <include refid="selectColumns"/>
         LEFT JOIN sys_user_role ur ON ur.role_id = a.id
         WHERE a.del_flag = '0'
@@ -24,13 +24,13 @@
     </select>
 
     <!-- 根据编号获得角色 -->
-    <select id="get" resultType="com.tony.admin.web.model.SysRole">
+    <select id="get" resultType="com.tony.admin.web.sys.model.SysRole">
         <include refid="selectColumns"/>
         WHERE a.id = #{id}
     </select>
 
     <!-- 分页查询角色信息 -->
-    <select id="findList" resultType="com.tony.admin.web.model.SysRole">
+    <select id="findList" resultType="com.tony.admin.web.sys.model.SysRole">
         <include refid="selectColumns"/>
         WHERE a.del_flag = '0'
         <if test="code != null and code != ''">
@@ -46,7 +46,7 @@
     </select>
 
     <!-- 查询全部角色 -->
-    <select id="findAllList" resultType="com.tony.admin.web.model.SysRole">
+    <select id="findAllList" resultType="com.tony.admin.web.sys.model.SysRole">
         <include refid="selectColumns"/>
         WHERE a.del_flag = '0'
         ORDER BY a.create_time

@@ -17,8 +17,9 @@ import org.springframework.web.cors.CorsUtils;
 
 /**
  * spring-security配置
+ * @author Guoqing.Lee
+ * @date 2019年6月5日 上午10:52:25
  *
- * @author mij
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
@@ -48,8 +49,7 @@ public class AbstractWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.userDetailsService).passwordEncoder(this.passwordEncoder())
-        ;
+        auth.userDetailsService(this.userDetailsService).passwordEncoder(this.passwordEncoder());
     }
 
     @Bean
@@ -73,15 +73,15 @@ public class AbstractWebSecurityConfig extends WebSecurityConfigurerAdapter {
     	security
         .authorizeRequests()
         .antMatchers(
-			"/admin/admin/auth/token",
-			"/admin/admin/auth/getData",
-			"/admin/admin/common/getVerifyCode",
-			"/admin/admin/sys/ueditor/**",
-			"/admin/admin/common/getDict",
-			"/admin/admin/sys/generator/**"
+			"/auth/token",
+			"/auth/getVerifyCode",
+			"/auth/getQrcodeContent",
+			"/auth/qrcodeCheckLogin",
+			"/views/**",
+			"/js/**",
+			"/images/**"
 		)
-        .permitAll()
-        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll();//设置可跨域请求时的放行
+        .permitAll().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();//设置可跨域请求时的放行
     	security.headers().frameOptions().disable();
     	security
             .csrf().disable()
@@ -91,7 +91,6 @@ public class AbstractWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated();
 
         // Custom JWT based security filter
-        security
-            .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        security.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 }

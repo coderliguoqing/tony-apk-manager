@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tony.admin.web.mapper.SysDictEntryMapper">
-  <resultMap id="DictResultMap" type="com.tony.admin.web.model.SysDictEntry">
+<mapper namespace="com.tony.admin.web.sys.mapper.SysDictEntryMapper">
+  <resultMap id="DictResultMap" type="com.tony.admin.web.sys.model.SysDictEntry">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="dicttype_id" jdbcType="VARCHAR" property="dicttypeId" />
     <result column="dict_id" jdbcType="VARCHAR" property="dictId" />
@@ -22,7 +22,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   
-  <insert id="insert" parameterType="com.tony.admin.web.model.SysDictEntry">
+  <insert id="insert" parameterType="com.tony.admin.web.sys.model.SysDictEntry">
     insert into sys_dict_entry (id, dicttype_id, dict_id, 
       dict_name, status, sort, 
       create_time, op_time, del_flag
@@ -33,7 +33,7 @@
       )
   </insert>
   
-  <update id="update" parameterType="com.tony.admin.web.model.SysDictEntry">
+  <update id="update" parameterType="com.tony.admin.web.sys.model.SysDictEntry">
     update sys_dict_entry
     set dicttype_id = #{dicttypeId,jdbcType=VARCHAR},
       dict_id = #{dictId,jdbcType=VARCHAR},

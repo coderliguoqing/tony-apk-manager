@@ -1,14 +1,6 @@
 package com.tony.admin.web.common.security.model;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import com.tony.admin.web.common.utils.StringHelper;
-import com.tony.admin.web.model.SysMenu;
-import com.tony.admin.web.model.SysRole;
-import com.tony.admin.web.model.SysUser;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import com.tony.admin.web.sys.model.SysUser;
 
 /**
  * The type Auth user factory.
@@ -27,7 +19,8 @@ public final class AuthUserFactory {
      * @return the auth user
      */
     public static AuthUser create(SysUser user) {
-        AuthUser authUser = new AuthUser(user.getId());
+        AuthUser authUser = new AuthUser();
+        authUser.setId(user.getId());
         authUser.setLoginName(user.getLoginName());
         authUser.setName(user.getName());
         authUser.setEmail(user.getEmail());
@@ -35,32 +28,8 @@ public final class AuthUserFactory {
         authUser.setMobile(user.getMobile());
         authUser.setPassword(user.getPassword());
         authUser.setEnabled(user.getEnabled());
-        authUser.setAuthorities(mapToGrantedAuthorities(user.getRoles(), user.getMenus()));
+        authUser.setAuthorities(null);
         return authUser;
-    }
-
-    /**
-     * 权限转换
-     *
-     * @param sysRoles 角色列表
-     * @param sysMenus 菜单列表
-     * @return 权限列表
-     */
-    private static List<SimpleGrantedAuthority> mapToGrantedAuthorities(List<SysRole> sysRoles, List<SysMenu> sysMenus) {
-
-        List<SimpleGrantedAuthority> authorities =
-            sysRoles.stream().filter(SysRole::getEnabled)
-                .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName())).collect(Collectors.toList());
-
-        // 添加基于Permission的权限信息
-        sysMenus.stream().filter(menu -> StringHelper.isNotBlank(menu.getPermission())).forEach(menu -> {
-            // 添加基于Permission的权限信息
-            for (String permission : StringHelper.split(menu.getPermission(), ",")) {
-                authorities.add(new SimpleGrantedAuthority(permission));
-            }
-        });
-
-        return authorities;
     }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tony.admin.web.mapper.SysDictTypeMapper">
-  <resultMap id="BaseResultMap" type="com.tony.admin.web.model.SysDictType">
+<mapper namespace="com.tony.admin.web.sys.mapper.SysDictTypeMapper">
+  <resultMap id="BaseResultMap" type="com.tony.admin.web.sys.model.SysDictType">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="dicttype_id" jdbcType="VARCHAR" property="dicttypeId" />
     <result column="dicttype_name" jdbcType="VARCHAR" property="dicttypeName" />
@@ -19,7 +19,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   
-  <insert id="insert" parameterType="com.tony.admin.web.model.SysDictType">
+  <insert id="insert" parameterType="com.tony.admin.web.sys.model.SysDictType">
     insert into sys_dict_type (id, dicttype_id, dicttype_name, 
       create_time, op_time, del_flag
       )
@@ -28,7 +28,7 @@
       )
   </insert>
   
-  <update id="update" parameterType="com.tony.admin.web.model.SysDictType">
+  <update id="update" parameterType="com.tony.admin.web.sys.model.SysDictType">
     update sys_dict_type
     set dicttype_id = #{dicttypeId,jdbcType=VARCHAR},
       dicttype_name = #{dicttypeName,jdbcType=VARCHAR},
@@ -65,7 +65,7 @@
     update sys_dict_type set del_flag = '1' where id =  #{id,jdbcType=VARCHAR}
   </update>
   
-  <select id="getDictInfoByTypeId" parameterType="java.util.HashMap" resultType="com.tony.admin.web.model.DictInfo">
+  <select id="getDictInfoByTypeId" parameterType="java.util.HashMap" resultType="com.tony.admin.web.sys.model.DictInfo">
     SELECT
 		sde.dict_id AS dictId,
 		sde.dict_name AS dictName
@@ -80,7 +80,7 @@
 		sde.sort ASC;
   </select>
   
-  <select id="getDictEntryByTypeId" parameterType="java.lang.Integer" resultType="com.tony.admin.web.model.SysDictEntry">
+  <select id="getDictEntryByTypeId" parameterType="java.lang.Integer" resultType="com.tony.admin.web.sys.model.SysDictEntry">
     SELECT
 		sde.id,
 		sde.dicttype_id AS dicttypeId,

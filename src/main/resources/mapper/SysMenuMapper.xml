@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tony.admin.web.mapper.SysMenuMapper">
+<mapper namespace="com.tony.admin.web.sys.mapper.SysMenuMapper">
 
     <sql id="selectColumns">
         SELECT DISTINCT
@@ -20,12 +20,12 @@
         FROM sys_menu a
     </sql>
 
-    <select id="get" resultType="com.tony.admin.web.model.SysMenu">
+    <select id="get" resultType="com.tony.admin.web.sys.model.SysMenu">
         <include refid="selectColumns"/>
         WHERE a.id = #{id}
     </select>
 
-    <select id="findListByUserId" resultType="com.tony.admin.web.model.SysMenu">
+    <select id="findListByUserId" resultType="com.tony.admin.web.sys.model.SysMenu">
         <include refid="selectColumns"/>
         JOIN sys_role_menu rm ON rm.menu_id = a.id
         JOIN sys_role r ON r.id = rm.role_id AND r.enabled = '1' AND r.del_flag = '0'
@@ -35,7 +35,7 @@
         ORDER BY a.sort asc
     </select>
 
-    <select id="findListByRoleId" resultType="com.tony.admin.web.model.SysMenu">
+    <select id="findListByRoleId" resultType="com.tony.admin.web.sys.model.SysMenu">
         <include refid="selectColumns"/>
         LEFT JOIN sys_role_menu rm ON rm.menu_id = a.id
         WHERE a.del_flag = '0'
@@ -44,7 +44,7 @@
         ORDER BY a.sort asc
     </select>
 
-    <select id="findAllList" resultType="com.tony.admin.web.model.SysMenu">
+    <select id="findAllList" resultType="com.tony.admin.web.sys.model.SysMenu">
         <include refid="selectColumns"/>
         WHERE a.del_flag = '0'
         ORDER BY a.sort asc
@@ -107,7 +107,7 @@
         WHERE id = #{id} OR parent_ids LIKE CONCAT('%', #{id}, ',%')
     </update>
 
-    <select id="findByParentIdsLike" resultType="com.tony.admin.web.model.SysMenu">
+    <select id="findByParentIdsLike" resultType="com.tony.admin.web.sys.model.SysMenu">
         SELECT
             a.id,
             a.parent_id,

@@ -1,6 +1,8 @@
 #服务启动提供的访问端口
 server:
   port: 8081
+  websocket:
+    port: 8888
   
 #服务应用名
 spring:
@@ -8,11 +10,18 @@ spring:
     name: tony-apk-manager
   #redis相关配置
   redis:
-    host: 192.168.234.33
-    port: 56379
+    cluster:
+      nodes:
+      - 192.168.234.6:6579
+      - 192.168.234.18:6579
+      - 192.168.234.28:6579
+      - 192.168.234.29:6579
+      - 192.168.234.30:6579
+      - 192.168.234.43:6579
+    port: 6579
     database: 0
     timeout: 0
-    password: Mon56BuEcXzZ
+    password: Mon56BuEcClust
     pool:
       max-active: 8
       max-wait: -1
@@ -22,9 +31,9 @@ spring:
     store-type: none
   #mybatis数据源连接池相关配置
   datasource:
-    url: jdbc:mysql://192.168.240.29:8096/bm_market?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
-    username: BlueMoon
-    password: bm.mall.123
+    url: jdbc:mysql://192.168.240.20:3306/vans?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    username: root
+    password: bpms123
     driver-class-name: com.mysql.jdbc.Driver
     druid:
       max-active: 20

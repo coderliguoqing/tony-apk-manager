@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tony.admin.web.common.config.WebConfig,com.tony.admin.web.common.redis.RedisCacheConfig
+com.tony.admin.web.common.redis.RedisCacheConfig

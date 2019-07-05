@@ -20,7 +20,7 @@ import java.io.IOException;
 /**
  * Token 校验过滤器
  *
- * @author mij
+ * @author Guoqing
  */
 public class AuthenticationTokenFilter extends GenericFilterBean {
 

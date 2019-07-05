@@ -1,18 +1,18 @@
 package com.tony.admin.web.common.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.Collection;
 
-/**
- * Security User
- *
- * @author GuoqingLee
- */
-public class AuthUser extends AbstractAuthUser {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-    /**
+public class AuthUser implements UserDetails {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * id
      */
     private Integer id;
@@ -50,90 +50,98 @@ public class AuthUser extends AbstractAuthUser {
      */
     private boolean enabled;
 
-    public AuthUser(Integer id) {
-        this.id = id;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	@Override
+	public String getUsername() {
+		return loginName;
+	}
 
-    @Override
-    public String getUsername() {
-        return loginName;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    public String getLoginName() {
-        return loginName;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
-    @JsonIgnore
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getLoginName() {
+		return loginName;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setAuthorities(Collection<SimpleGrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public String getMobile() {
-        return mobile;
-    }
+	public String getMobile() {
+		return mobile;
+	}
 
-    @Override
-    public Collection<SimpleGrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-    
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
+	public void setAuthorities(Collection<SimpleGrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 }

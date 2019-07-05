@@ -9,8 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.tony.admin.web.TonyApplication;
-import com.tony.admin.web.mapper.MBannerMapper;
-import com.tony.admin.web.model.MBanner;
+import com.tony.admin.web.sys.mapper.MBannerMapper;
+import com.tony.admin.web.sys.model.MBanner;
+
+import tk.mybatis.mapper.entity.Example;
 
 
 @RunWith(SpringRunner.class)
@@ -22,7 +24,9 @@ public class SampleTest {
 	
 	@Test
 	public void test() {
-		List<MBanner> list = bannerMapper.selectAll();
+		Example example = new Example(MBanner.class);
+		example.createCriteria().andEqualTo("id", 1);
+		List<MBanner> list = bannerMapper.selectByExample(example);
 		list.forEach(banner->{
 			System.out.println(banner);
 		});

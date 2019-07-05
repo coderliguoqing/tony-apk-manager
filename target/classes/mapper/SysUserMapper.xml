@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.tony.admin.web.mapper.SysUserMapper">
+<mapper namespace="com.tony.admin.web.sys.mapper.SysUserMapper">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.tony.admin.web.model.SysUser" id="BaseResultMap">
+    <resultMap type="com.tony.admin.web.sys.model.SysUser" id="BaseResultMap">
         <result property="id" column="id"/>
         <result property="loginName" column="login_name"/>
         <result property="password" column="password"/>
@@ -61,7 +61,7 @@
     </select>
 
 	 
-	<insert id="insert" parameterType="com.tony.admin.web.model.SysUser" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.tony.admin.web.sys.model.SysUser" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_user
 		(
 			`login_name`, 
@@ -92,7 +92,7 @@
 		)
 	</insert>
 	 
-	<update id="update" parameterType="com.tony.admin.web.model.SysUser">
+	<update id="update" parameterType="com.tony.admin.web.sys.model.SysUser">
 		update sys_user 
 		<set>
 			<if test="loginName != null">`login_name` = #{loginName}, </if>
@@ -154,7 +154,7 @@
         </foreach>
     </insert>
     
-    <select id="getAuthList" resultType="com.tony.admin.web.model.SysRole">
+    <select id="getAuthList" resultType="com.tony.admin.web.sys.model.SysRole">
     	SELECT
 			b.id as id,
 			b.code as code,
@@ -166,7 +166,7 @@
 			a.user_id = #{userId}
     </select>
     
-    <select id="getUnAuthList" resultType="com.tony.admin.web.model.SysRole">
+    <select id="getUnAuthList" resultType="com.tony.admin.web.sys.model.SysRole">
         SELECT
 			c.id as id,
 			c.code as code,
@@ -198,7 +198,7 @@
     </delete>
     
     <!-- 根据登录名查询用户 -->
-    <select id="getByLoginName" resultType="com.tony.admin.web.model.SysUser">
+    <select id="getByLoginName" resultType="com.tony.admin.web.sys.model.SysUser">
         <include refid="selectColumns"/>
         WHERE a.login_name = #{loginName}
     </select>

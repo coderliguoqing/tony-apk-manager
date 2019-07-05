@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.tony.admin.web.common.security.model.AuthUserFactory;
-import com.tony.admin.web.model.SysUser;
-import com.tony.admin.web.service.ISystemService;
+import com.tony.admin.web.sys.model.SysUser;
+import com.tony.admin.web.sys.service.ISystemService;
 
 /**
  * 用户通过用户名密码登录时的实现接口，用户获取用户信息
@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", loginName));
         } else {
-            return AuthUserFactory.create(user);
+        	return AuthUserFactory.create(user);
         }
     }
 

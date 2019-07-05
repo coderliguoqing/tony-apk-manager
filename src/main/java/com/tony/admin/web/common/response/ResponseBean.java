@@ -1,5 +1,7 @@
 package com.tony.admin.web.common.response;
 
+import com.tony.admin.web.common.response.ResponseBean;
+
 /**
  * 返回对象的基础bean
  * @author Guoqing
@@ -27,12 +29,40 @@ public class ResponseBean {
 	 */
 	private Object data;
 
+	public ResponseBean() {}
+	
+	public ResponseBean(boolean isSuccess, int responseCode, String responseMsg) {
+		this.isSuccess = isSuccess;
+		this.responseCode = responseCode;
+		this.responseMsg = responseMsg;
+	}
+
 	public ResponseBean(boolean isSuccess, int responseCode, String responseMsg, Object data) {
-		super();
 		this.isSuccess = isSuccess;
 		this.responseCode = responseCode;
 		this.responseMsg = responseMsg;
 		this.data = data;
+	}
+	
+	public ResponseBean(ResponseConstant constant, Object data) {
+		this.isSuccess = constant.isSuccess();
+		this.responseCode = constant.getResponseCode();
+		this.responseMsg = constant.getResponseMsg();
+		this.data = data;
+	}
+	
+	public ResponseBean(ResponseConstant constant) {
+		this.isSuccess = constant.isSuccess();
+		this.responseCode = constant.getResponseCode();
+		this.responseMsg = constant.getResponseMsg();
+	}
+	
+	public static ResponseBean success() {
+		return new ResponseBean(true, 0, "请求成功");
+	}
+	
+	public static ResponseBean error(int responseCode, String responseMsg) {
+		return new ResponseBean(false, responseCode, responseMsg);
 	}
 
 	public boolean getIsSuccess() {
