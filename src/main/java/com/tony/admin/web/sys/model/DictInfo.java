@@ -63,8 +63,6 @@ public class DictInfo implements Serializable{
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }

@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
@@ -20,7 +22,8 @@ import java.util.List;
 public class SysMenu implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
+    @Id
     private Integer id;
     /**
      * 父级编号
@@ -65,20 +68,12 @@ public class SysMenu implements Serializable {
     /**
      * 是否是叶子节点
      */
+    @Transient
     private Boolean leaf = true;
     /**
      * 子节点
      */
     private List<SysMenu> children = new ArrayList<>();
-    
-    /**
-     * 删除标记0：正常
-     */
-    public static final String DEL_FLAG_NORMAL = "0";
-    /**
-     * 删除标记1：删除
-     */
-    public static final String DEL_FLAG_DELETE = "1";
 
     /**
      * 创建日期
@@ -111,8 +106,6 @@ public class SysMenu implements Serializable {
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }

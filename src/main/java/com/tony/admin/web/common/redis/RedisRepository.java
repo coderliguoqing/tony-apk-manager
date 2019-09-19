@@ -228,7 +228,7 @@ public class RedisRepository {
      *
      * @return the hash operations
      */
-    public HashOperations<String, String, String> opsForHash() {
+    public HashOperations<String, String, Object> opsForHash() {
         return redisTemplate.opsForHash();
     }
 
@@ -239,7 +239,7 @@ public class RedisRepository {
      * @param hashKey   the hash key
      * @param hashValue the hash value
      */
-    public void putHashValue(String key, String hashKey, String hashValue) {
+    public void putHashValue(String key, String hashKey, Object hashValue) {
         LOGGER.info("[redisTemplate redis]  putHashValue()  key={},hashKey={},hashValue={} ", key, hashKey, hashValue);
         opsForHash().put(key, hashKey, hashValue);
     }
@@ -273,7 +273,7 @@ public class RedisRepository {
      * @param key the key
      * @return the hash value
      */
-    public Map<String, String> getHashValue(String key) {
+    public Map<String, Object> getHashValue(String key) {
         LOGGER.info("[redisTemplate redis]  getHashValue()  key={}", key);
         return opsForHash().entries(key);
     }
@@ -284,7 +284,7 @@ public class RedisRepository {
      * @param key the key
      * @param map the map
      */
-    public void putHashValues(String key, Map<String, String> map) {
+    public void putHashValues(String key, Map<String, Object> map) {
         opsForHash().putAll(key, map);
     }
 

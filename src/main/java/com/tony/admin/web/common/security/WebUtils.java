@@ -7,13 +7,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 /**
  *
  * @Description  WEB工具类
- *
  * @author Guoqing
  * @Date 2018年1月16日
  */
 public final class WebUtils {
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * 获取当前登录用户
+	 * @param <T>
+	 * @return
+	 */
 	public static <T extends UserDetails> T getCurrentUser(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return (T)authentication.getPrincipal();

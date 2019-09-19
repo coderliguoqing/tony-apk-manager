@@ -9,6 +9,8 @@ package com.tony.admin.web.common.response;
 public enum ResponseConstant {
 	
 	SUCCESS(true, 0, "请求成功"),
+	FORBIDDEN(false, 403, "没有相关访问权限"),
+	IVALID_TOKEN(false, 401, "token已失效，请重新登录"),
 	SERVER_ERROR(false, 1000, "服务器繁忙，请稍后再试"),
 	IVALID_ERROR(false, 1102, "请求参数格式错误"),
 	IVALID_VERIFY_CODE(false, 1001, "验证码已失效，请重新登录"),

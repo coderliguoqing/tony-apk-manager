@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Id;
+
 /**
  * 业务字典项实体类
  * @author Guoqing.Lee
@@ -15,7 +17,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 public class SysDictEntry implements Serializable {
-	private Integer id;
+
+    @Id
+    private Integer id;
 	
     private String dicttypeId;
 
@@ -69,8 +73,6 @@ public class SysDictEntry implements Serializable {
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }

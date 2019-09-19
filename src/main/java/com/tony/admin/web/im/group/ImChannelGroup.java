@@ -77,5 +77,5 @@ public class ImChannelGroup {
 	public static int size() {
 		return CHANNELGROUP.size();
 	}
-	
+
 }

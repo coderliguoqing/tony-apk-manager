@@ -1,11 +1,14 @@
 package com.tony.admin.web.sys.model;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tony.admin.web.im.model.Group;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +29,8 @@ public class SysUser implements Serializable {
      * 超级管理用户ID
      */
     public static final Integer ADMIN_USER_ID = 1;
-    
+
+    @Id
     private Integer id;
     /**
      * 登录名
@@ -55,9 +59,25 @@ public class SysUser implements Serializable {
      */
     private String mobile;
     /**
+     * 头像地址
+     */
+    private String avatar;
+    /**
      * 是否可用
      */
     private Boolean enabled;
+    /**
+     * 用户的IM状态
+     */
+    private Integer status;
+    /**
+     * 昵称
+     */
+    private String nick;
+    /**
+     * 个性签名
+     */
+    private String sign;
     /**
      * 备注
      */
@@ -71,18 +91,22 @@ public class SysUser implements Serializable {
      */
     private List<SysMenu> menus = new ArrayList<>();
 
+    /**
+     * 好友列表
+     */
+    private List<Group> friends;
+    /**
+     * 群组列表
+     */
+    private List<Group> groups;
+    /**
+     * 扩展预留字段
+     */
+    private JSONObject extras;
+
     public SysUser() {
         super();
     }
-
-    /**
-     * 删除标记0：正常
-     */
-    public static final String DEL_FLAG_NORMAL = "0";
-    /**
-     * 删除标记1：删除
-     */
-    public static final String DEL_FLAG_DELETE = "1";
 
     /**
      * 创建日期
@@ -115,8 +139,6 @@ public class SysUser implements Serializable {
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }
@@ -230,5 +252,59 @@ public class SysUser implements Serializable {
         this.menus = menus;
     }
 
-    
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public List<Group> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<Group> friends) {
+        this.friends = friends;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public JSONObject getExtras() {
+        return extras;
+    }
+
+    public void setExtras(JSONObject extras) {
+        this.extras = extras;
+    }
 }

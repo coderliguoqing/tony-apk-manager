@@ -2,6 +2,7 @@ package com.tony.admin.web.common.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsUtils;
 
 /**
  * spring-security配置
@@ -29,6 +29,10 @@ public class AbstractWebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private MyAccessDeniedHandler myAccessDeniedHandler;
+    @Autowired
+    private MyAuthenticationEntryPoint myAuthenticationEntryPoint;
 
     /**
      * BCryptPasswordEncoder 采用的是SHA-256+随机盐+密码的方式进行加密
@@ -71,26 +75,39 @@ public class AbstractWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity security) throws Exception {
     	security
-        .authorizeRequests()
+        .csrf()
+        .disable()
+        // 基于token，不需要session
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().authorizeRequests()
         .antMatchers(
-			"/auth/token",
-			"/auth/getVerifyCode",
-			"/auth/getQrcodeContent",
-			"/auth/qrcodeCheckLogin",
+			"/admin/admin/auth/token",
+			"/admin/admin/common/getVerifyCode",
+			"/admin/admin/auth/getQrcodeContent",
+			"/admin/admin/auth/qrcodeCheckLogin",
+			"/admin/admin/sys/ueditor/exec",
+            "/admin/admin/auth/menu/nav",
+            "/admin/admin/auth/user/info",
+			"/admin/admin/common/createCloudUploadToken",
+			"/admin/admin/im/sendMessage",
 			"/views/**",
 			"/js/**",
 			"/images/**"
 		)
-        .permitAll().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();//设置可跨域请求时的放行
-    	security.headers().frameOptions().disable();
-    	security
-            .csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(new MyAuthenticationEntryPoint()).and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests()
-            .anyRequest().authenticated();
+        .permitAll()
+        .antMatchers(HttpMethod.OPTIONS)
+        .permitAll()
+        .anyRequest()
+        .authenticated()
+        // 该设置为了前端在抛异常时可以拿到response
+        .and().cors();
 
-        // Custom JWT based security filter
+        // 添加JWT token的过滤器
         security.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        // 添加自定义未授权和未登录的结果返回
+        security.exceptionHandling()
+                .accessDeniedHandler(myAccessDeniedHandler)
+                .authenticationEntryPoint(myAuthenticationEntryPoint);
     }
 }

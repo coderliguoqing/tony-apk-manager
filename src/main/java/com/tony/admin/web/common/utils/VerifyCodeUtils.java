@@ -36,12 +36,10 @@ public class VerifyCodeUtils {
 	 * @return		base64的验证码图片
 	 * @throws IOException
 	 */
-	@SuppressWarnings("static-access")
 	public static String verifyCode(int w, int h, String code) throws IOException {
-        Base64Encoder encoder = new Base64Encoder();
         ByteArrayOutputStream data = new ByteArrayOutputStream();
         outputImage(w, h, data, code);
-        String img = encoder.encode(data.toByteArray());
+        String img = Base64Encoder.encode(data.toByteArray());
         return img;
     }
 	
@@ -102,12 +100,11 @@ public class VerifyCodeUtils {
 		int verifySize = randKey.length();
 		for (int i = 0; i < verifySize; i++) {
 			String sRand = randKey.substring(i, i+1);
-			String rand = String.valueOf(sRand);
 			// 将认证码显示到图象中
 			//调用函数出来的颜色相同，可能是因为种子太接近，所以只能直接生成
 			g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
 			//13   16   调整图片数字的位置
-			g.drawString(rand, 21 * i + 6, 20);
+			g.drawString(sRand, 21 * i + 6, 20);
 		} 
 
 		// 图象生效
@@ -124,10 +121,12 @@ public class VerifyCodeUtils {
 	 */
 	public static Color getRandColor(int fc, int bc) {
 		Random random = new Random();
-		if (fc > 255)
+		if (fc > 255){
 			fc = 255;
-		if (bc > 255)
+		}
+		if (bc > 255){
 			bc = 255;
+		}
 		int r = fc + random.nextInt(bc - fc);
 		int g = fc + random.nextInt(bc - fc);
 		int b = fc + random.nextInt(bc - fc);

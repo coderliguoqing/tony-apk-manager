@@ -3,7 +3,6 @@ package com.tony.admin.web.sys.mapper;
 import java.util.HashMap;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tony.admin.web.common.dao.CrudDao;
 import com.tony.admin.web.sys.model.SysDictEntry;
 
 
@@ -14,7 +13,7 @@ import com.tony.admin.web.sys.model.SysDictEntry;
  *
  */
 @Mapper
-public interface SysDictEntryMapper extends CrudDao<SysDictEntry> {
+public interface SysDictEntryMapper extends tk.mybatis.mapper.common.Mapper<SysDictEntry> {
 	
 	/**
 	 * 根据类型和Id查询

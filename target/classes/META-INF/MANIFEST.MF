@@ -20,27 +20,39 @@ Class-Path: lib/fastjson-1.2.28.jar lib/mapper-spring-boot-starter-2.1
  cket-8.5.27.jar lib/hibernate-validator-5.3.6.Final.jar lib/validatio
  n-api-1.1.0.Final.jar lib/jboss-logging-3.3.1.Final.jar lib/classmate
  -1.3.4.jar lib/jackson-databind-2.8.10.jar lib/jackson-annotations-2.
- 8.0.jar lib/jackson-core-2.8.10.jar lib/spring-web-4.3.14.RELEASE.jar
-  lib/spring-context-4.3.14.RELEASE.jar lib/spring-webmvc-4.3.14.RELEA
- SE.jar lib/spring-expression-4.3.14.RELEASE.jar lib/spring-boot-start
- er-jdbc-1.5.10.RELEASE.jar lib/tomcat-jdbc-8.5.27.jar lib/tomcat-juli
- -8.5.27.jar lib/spring-jdbc-4.3.14.RELEASE.jar lib/spring-tx-4.3.14.R
- ELEASE.jar lib/mysql-connector-java-5.1.45.jar lib/druid-1.0.11.jar l
- ib/spring-boot-starter-security-1.5.10.RELEASE.jar lib/spring-securit
- y-config-4.2.4.RELEASE.jar lib/spring-security-core-4.2.4.RELEASE.jar
-  lib/spring-security-web-4.2.4.RELEASE.jar lib/spring-boot-configurat
- ion-processor-1.5.10.RELEASE.jar lib/jjwt-0.6.0.jar lib/logback-class
- ic-1.1.11.jar lib/logback-core-1.1.11.jar lib/slf4j-api-1.7.25.jar li
- b/logback-access-1.1.11.jar lib/spring-boot-starter-data-redis-1.5.10
- .RELEASE.jar lib/spring-data-redis-1.8.10.RELEASE.jar lib/spring-data
- -keyvalue-1.2.10.RELEASE.jar lib/spring-data-commons-1.13.10.RELEASE.
- jar lib/spring-oxm-4.3.14.RELEASE.jar lib/spring-context-support-4.3.
- 14.RELEASE.jar lib/jcl-over-slf4j-1.7.25.jar lib/jedis-2.9.0.jar lib/
- commons-pool2-2.4.3.jar lib/gson-2.8.2.jar lib/pagehelper-4.1.6.jar l
- ib/jsqlparser-0.9.5.jar lib/mybatis-spring-boot-starter-1.3.0.jar lib
- /mybatis-spring-boot-autoconfigure-1.3.0.jar lib/spring-core-4.3.14.R
- ELEASE.jar lib/hutool-all-4.5.0.jar lib/commons-lang3-3.8.1.jar lib/n
- etty-all-4.1.6.Final.jar lib/protobuf-java-3.4.0.jar
+ 8.0.jar lib/spring-web-4.3.14.RELEASE.jar lib/spring-context-4.3.14.R
+ ELEASE.jar lib/spring-webmvc-4.3.14.RELEASE.jar lib/spring-expression
+ -4.3.14.RELEASE.jar lib/spring-boot-starter-jdbc-1.5.10.RELEASE.jar l
+ ib/tomcat-jdbc-8.5.27.jar lib/tomcat-juli-8.5.27.jar lib/spring-jdbc-
+ 4.3.14.RELEASE.jar lib/spring-tx-4.3.14.RELEASE.jar lib/mysql-connect
+ or-java-5.1.45.jar lib/druid-1.0.11.jar lib/spring-boot-starter-secur
+ ity-1.5.10.RELEASE.jar lib/spring-security-config-4.2.4.RELEASE.jar l
+ ib/spring-security-core-4.2.4.RELEASE.jar lib/spring-security-web-4.2
+ .4.RELEASE.jar lib/spring-boot-configuration-processor-1.5.10.RELEASE
+ .jar lib/jjwt-0.6.0.jar lib/logback-classic-1.1.11.jar lib/logback-co
+ re-1.1.11.jar lib/slf4j-api-1.7.25.jar lib/logback-access-1.1.11.jar 
+ lib/spring-boot-starter-data-redis-1.5.10.RELEASE.jar lib/spring-data
+ -redis-1.8.10.RELEASE.jar lib/spring-data-keyvalue-1.2.10.RELEASE.jar
+  lib/spring-data-commons-1.13.10.RELEASE.jar lib/spring-oxm-4.3.14.RE
+ LEASE.jar lib/spring-context-support-4.3.14.RELEASE.jar lib/jcl-over-
+ slf4j-1.7.25.jar lib/jedis-2.9.0.jar lib/commons-pool2-2.4.3.jar lib/
+ gson-2.8.2.jar lib/pagehelper-4.1.6.jar lib/jsqlparser-0.9.5.jar lib/
+ mybatis-spring-boot-starter-1.3.0.jar lib/mybatis-spring-boot-autocon
+ figure-1.3.0.jar lib/objenesis-2.1.jar lib/spring-core-4.3.14.RELEASE
+ .jar lib/redisson-3.10.1.jar lib/netty-common-4.1.32.Final.jar lib/ne
+ tty-codec-4.1.32.Final.jar lib/netty-buffer-4.1.32.Final.jar lib/nett
+ y-transport-4.1.32.Final.jar lib/netty-resolver-4.1.32.Final.jar lib/
+ netty-resolver-dns-4.1.32.Final.jar lib/netty-codec-dns-4.1.32.Final.
+ jar lib/netty-handler-4.1.32.Final.jar lib/cache-api-1.0.0.jar lib/re
+ actor-core-2.0.8.RELEASE.jar lib/reactive-streams-1.0.0.jar lib/rxjav
+ a-2.1.13.jar lib/fst-2.56.jar lib/javassist-3.21.0-GA.jar lib/jackson
+ -dataformat-yaml-2.8.10.jar lib/jackson-core-2.8.10.jar lib/byte-budd
+ y-1.9.6.jar lib/jodd-bean-3.7.1.jar lib/jodd-core-3.7.1.jar lib/hutoo
+ l-all-4.5.0.jar lib/commons-lang3-3.8.1.jar lib/netty-all-4.1.6.Final
+ .jar lib/protobuf-java-3.4.0.jar lib/httpclient-4.5.5.jar lib/httpcor
+ e-4.4.9.jar lib/commons-codec-1.10.jar lib/httpmime-4.5.5.jar lib/qin
+ iu-java-sdk-7.2.0.jar lib/okhttp-3.3.1.jar lib/okio-1.8.0.jar lib/hap
+ py-dns-java-0.1.4.jar
 Build-Jdk: 1.8.0_171
 Implementation-URL: http://projects.spring.io/spring-boot/tony-apk-man
  ager/

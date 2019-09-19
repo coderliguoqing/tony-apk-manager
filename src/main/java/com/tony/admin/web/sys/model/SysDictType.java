@@ -1,37 +1,23 @@
 package com.tony.admin.web.sys.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * 业务字典实体类
+ *
  * @author Guoqing.Lee
  * @date 2019年1月16日 下午1:26:16
- *
  */
 public class SysDictType implements Serializable {
-	private Integer id;
-	
-    private String dicttypeId;
-
-    private String dicttypeName;
-
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * 删除标记0：正常
-     */
-    public static final String DEL_FLAG_NORMAL = "0";
-    /**
-     * 删除标记1：删除
-     */
-    public static final String DEL_FLAG_DELETE = "1";
-
+    @Id
+    private Integer id;
+    private String dicttypeId;
+    private String dicttypeName;
     /**
      * 创建日期
      */
@@ -63,8 +49,6 @@ public class SysDictType implements Serializable {
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }
@@ -72,22 +56,22 @@ public class SysDictType implements Serializable {
     public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
-    
+
     /**
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getDicttypeId() {
+    public String getDicttypeId() {
         return dicttypeId;
     }
 

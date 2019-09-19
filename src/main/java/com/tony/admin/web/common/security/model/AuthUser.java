@@ -41,6 +41,22 @@ public class AuthUser implements UserDetails {
      * 手机
      */
     private String mobile;
+	/**
+	 * 头像
+	 */
+	private String avatar;
+	/**
+	 * 昵称
+	 */
+    private String nick;
+	/**
+	 * 签名
+	 */
+    private String sign;
+	/**
+	 * IM在线状态
+	 */
+	private Integer status;
     /**
      * 权限
      */
@@ -143,5 +159,37 @@ public class AuthUser implements UserDetails {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

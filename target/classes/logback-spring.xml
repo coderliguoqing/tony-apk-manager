@@ -99,7 +99,8 @@
         </filter>
     </appender>
     <!-- 打印sql日志，记录在debug文件 -->
-    <logger name="com.tony.admin.web.mapper" level="DEBUG" additivity="true"/>
+    <logger name="com.tony.admin.web.sys.mapper" level="DEBUG" additivity="true"/>
+    <logger name="com.tony.admin.web.im.mapper" level="DEBUG" additivity="true"/>
     <root level="INFO">
         <!-- <appender-ref ref="STDOUT" /> -->
         <appender-ref ref="INFO_FILE" />

@@ -1,6 +1,5 @@
 package com.tony.admin.web.common.response;
 
-import com.tony.admin.web.common.response.ResponseBean;
 
 /**
  * 返回对象的基础bean

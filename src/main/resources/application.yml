@@ -1,8 +1,11 @@
 #服务启动提供的访问端口
 server:
   port: 8081
+
+netty:
   websocket:
     port: 8888
+
   
 #服务应用名
 spring:
@@ -11,16 +14,10 @@ spring:
   #redis相关配置
   redis:
     cluster:
-      nodes:
-      - 192.168.234.6:6579
-      - 192.168.234.18:6579
-      - 192.168.234.28:6579
-      - 192.168.234.29:6579
-      - 192.168.234.30:6579
-      - 192.168.234.43:6579
+      nodes: 192.168.234.6:6579,192.168.234.18:6579,192.168.234.28:6579,192.168.234.29:6579,192.168.234.30:6579,192.168.234.43:6579
     port: 6579
     database: 0
-    timeout: 0
+    timeout: 3000
     password: Mon56BuEcClust
     pool:
       max-active: 8
@@ -60,5 +57,15 @@ jwt:
   header: Authorization
   secret: mySecret
   md5-key: randomKey
-  expiration: 604800
-  
+
+#云盘对接
+cloud:
+  appID: bluemoon
+  bmCloud: http://tmallapi.bluemoon.com.cn/cloudStorage/read/read?p=
+  simpleUploadEntry: http://tmallapi.bluemoon.com.cn/cloudStorage/file/simUpload
+  secretKey: sIZnX5jK7Fk&kUlKfho9GNNNY3ihQwKf
+qiniu:
+  accessKey: z28CT52ky38V2lxQLzm6cY67k18swi06fTV22vIe
+  secretKey: QBD80YSO78CgbFkPA3bSWPeN85svJkzUFyVIWs4K
+  prefixUrl: http://pvwrk8jca.bkt.clouddn.com/
+  bucket: guoqing

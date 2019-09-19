@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import com.tony.admin.web.sys.model.DictInfo;
 import com.tony.admin.web.sys.model.SysDictEntry;
 import com.tony.admin.web.sys.model.SysDictType;
 import com.tony.admin.web.sys.service.IDictService;
+import tk.mybatis.mapper.entity.Example;
 
 
 /**
@@ -35,7 +37,17 @@ public class DictServiceImpl implements IDictService {
 	@Override
 	public PageInfo<SysDictType> findDictTypePage(Paging page, SysDictType dictType) {
 		PageHelper.startPage(page.getPageNum(), page.getPageSize(), true, true);
-		List<SysDictType> list = dictTypeMapper.findList(dictType);
+		Example example = new Example(SysDictType.class);
+		Example.Criteria criteria = example.createCriteria();
+		if(StringUtils.isNotEmpty(dictType.getDicttypeId())){
+			criteria.andLike("dicttypeId", dictType.getDicttypeId());
+		}
+		if(StringUtils.isNotEmpty(dictType.getDicttypeName())){
+			criteria.andLike("dicttypeName", dictType.getDicttypeName());
+		}
+		criteria.andEqualTo("delFlag", "0");
+		example.orderBy("dicttypeId").asc();
+		List<SysDictType> list = dictTypeMapper.selectByExample(example);
 		return new PageInfo<>(list);
 	}
 
@@ -44,10 +56,11 @@ public class DictServiceImpl implements IDictService {
 		if( dictType.getId() == null ){
 			dictType.setCreateTime(new Date());
 			dictType.setOpTime(new Date());
+			dictType.setDelFlag("0");
 			dictTypeMapper.insert(dictType);
 		}else{
 			dictType.setOpTime(new Date());
-			dictTypeMapper.update(dictType);
+			dictTypeMapper.updateByPrimaryKeySelective(dictType);
 		}
 		return dictType;
 	}
@@ -55,18 +68,29 @@ public class DictServiceImpl implements IDictService {
 	@Override
 	public void updateDictType(SysDictType dictType) {
 		dictType.setOpTime(new Date());
-		dictTypeMapper.update(dictType);
+		dictTypeMapper.updateByPrimaryKeySelective(dictType);
 	}
 
 	@Override
 	public void deleteDictTypeById(Integer id) {
-		dictTypeMapper.deleteById(Long.parseLong(id.toString()));
+		SysDictType dictType = new SysDictType();
+		dictType.setId(id);
+		dictType.setDelFlag("1");
+		dictType.setOpTime(new Date());
+		dictTypeMapper.updateByPrimaryKeySelective(dictType);
 	}
 
 	@Override
 	public PageInfo<SysDictEntry> findDictEntryPage(Paging page, SysDictEntry dictEntry) {
 		PageHelper.startPage(page.getPageNum(), page.getPageSize(), true, true);
-		List<SysDictEntry> list = dictEntryMapper.findList(dictEntry);
+		Example example = new Example(SysDictEntry.class);
+		Example.Criteria criteria = example.createCriteria();
+		if(StringUtils.isNotEmpty(dictEntry.getDicttypeId())){
+			criteria.andEqualTo("dicttypeId", dictEntry.getDicttypeId());
+		}
+		criteria.andEqualTo("delFlag", "0");
+		example.orderBy("sort").asc();
+		List<SysDictEntry> list = dictEntryMapper.selectByExample(example);
 		return new PageInfo<> (list);
 	}
 
@@ -75,10 +99,11 @@ public class DictServiceImpl implements IDictService {
 		if( dictEntry.getId() == null ){
 			dictEntry.setCreateTime(new Date());
 			dictEntry.setOpTime(new Date());
+			dictEntry.setDelFlag("0");
 			dictEntryMapper.insert(dictEntry);
 		}else{
 			dictEntry.setOpTime(new Date());
-			dictEntryMapper.update(dictEntry);
+			dictEntryMapper.updateByPrimaryKeySelective(dictEntry);
 		}
 		return dictEntry;
 	}
@@ -86,19 +111,24 @@ public class DictServiceImpl implements IDictService {
 	@Override
 	public void updateDictEntry(SysDictEntry dictEntry) {
 		dictEntry.setOpTime(new Date());
-		dictEntryMapper.update(dictEntry);
+		dictEntryMapper.updateByPrimaryKeySelective(dictEntry);
 	}
 
 	@Override
 	public void deleteDictEntryById(Integer id) {
-		dictEntryMapper.deleteById(Long.parseLong(id.toString()));
+		SysDictEntry dictEntry = new SysDictEntry();
+		dictEntry.setId(id);
+		dictEntry.setDelFlag("1");
+		dictEntry.setOpTime(new Date());
+		dictEntryMapper.updateByPrimaryKeySelective(dictEntry);
 	}
 
 	@Override
 	public boolean checkDictTypeId(String dicttypeId) {
 		SysDictType dictType = new SysDictType();
 		dictType.setDicttypeId(dicttypeId);
-		List<SysDictType> list = dictTypeMapper.findList(dictType);
+		dictType.setDelFlag("0");
+		List<SysDictType> list = dictTypeMapper.select(dictType);
 		if( list.size() > 0 ){
 			return true;
 		}else{
@@ -111,7 +141,8 @@ public class DictServiceImpl implements IDictService {
 		SysDictEntry dictEntry = new SysDictEntry();
 		dictEntry.setDicttypeId(dicttypeId);
 		dictEntry.setDictId(dictId);
-		List<SysDictEntry> list = dictEntryMapper.findList(dictEntry);
+		dictEntry.setDelFlag("0");
+		List<SysDictEntry> list = dictEntryMapper.select(dictEntry);
 		if( list.size() > 0 ){
 			return true;
 		}else{

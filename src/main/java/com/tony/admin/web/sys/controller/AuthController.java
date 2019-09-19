@@ -235,7 +235,7 @@ public class AuthController{
     public ResponseEntity saveCurrentUserInfo(@Valid @RequestBody SysUser user) {
         AuthUser authUser = WebUtils.getCurrentUser();
         //只能更新当前用户信息
-        if (authUser.getId() == user.getId()) {
+        if (authUser.getId().equals(user.getId())) {
             // 保存用户信息
             systemService.updateUserInfo(user);
         }

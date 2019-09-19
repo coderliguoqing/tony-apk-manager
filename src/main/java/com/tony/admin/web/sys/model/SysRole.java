@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +21,8 @@ public class SysRole implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+    @Id
 	private Integer id;
 
 	/**
@@ -44,15 +46,6 @@ public class SysRole implements Serializable {
      * 菜单列表
      */
     private List<SysMenu> menus = new ArrayList<>();
-    
-    /**
-     * 删除标记0：正常
-     */
-    public static final String DEL_FLAG_NORMAL = "0";
-    /**
-     * 删除标记1：删除
-     */
-    public static final String DEL_FLAG_DELETE = "1";
 
     /**
      * 创建日期
@@ -85,8 +78,6 @@ public class SysRole implements Serializable {
         this.opTime = opTime == null ? null : (Date) opTime.clone();
     }
 
-    @JsonIgnore
-    @Length(min = 1, max = 1)
     public String getDelFlag() {
         return delFlag;
     }

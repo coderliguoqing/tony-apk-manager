@@ -27,8 +27,12 @@
   		name,   		
   		email,   		
   		phone,   		   		
-  		mobile,   		
-  		enabled,   		
+  		mobile,
+  		avatar,
+  		enabled,
+  		status,
+  		nick,
+  		sign,
   		remarks,   		
   		create_time,   		
   		op_time,   		
@@ -36,81 +40,6 @@
   		from sys_user a
 	</sql>
 
-    <select id="get" resultMap="BaseResultMap">
-        <include refid="selectColumns"/>
-        WHERE a.id = #{id}
-    </select>
-
-    <!-- 查询有效数据列表，可分页查询 -->
-    <select id="findList" resultMap="BaseResultMap">
-       <include refid="selectColumns"/>
-        WHERE a.del_flag = '0'
-        <if test="loginName != null and loginName != ''">
-            AND a.login_name like CONCAT('%', #{loginName}, '%')
-        </if>
-        <if test="name != null and name != ''">
-            AND a.name like CONCAT('%', #{name}, '%')
-        </if>
-        order by id desc
-    </select>
-    
-    <select id="findAllList" resultMap="BaseResultMap">
-    	<include refid="selectColumns"/>
-    	WHERE a.del_flag = '0'
-        order by id desc
-    </select>
-
-	 
-	<insert id="insert" parameterType="com.tony.admin.web.sys.model.SysUser" useGeneratedKeys="true" keyProperty="id">
-		insert into sys_user
-		(
-			`login_name`, 
-			`password`, 
-			`name`, 
-			`email`, 
-			`phone`, 
-			`mobile`, 
-			`enabled`, 
-			`remarks`, 
-			`create_time`, 
-			`op_time`, 
-			`del_flag`
-		)
-		values
-		(
-			#{loginName}, 
-			#{password}, 
-			#{name}, 
-			#{email}, 
-			#{phone},  
-			#{mobile}, 
-			#{enabled}, 
-			#{remarks}, 
-			#{createTime}, 
-			#{opTime}, 
-			#{delFlag}
-		)
-	</insert>
-	 
-	<update id="update" parameterType="com.tony.admin.web.sys.model.SysUser">
-		update sys_user 
-		<set>
-			<if test="loginName != null">`login_name` = #{loginName}, </if>
-			<if test="password != null">`password` = #{password}, </if>
-			<if test="name != null">`name` = #{name}, </if>
-			<if test="email != null">`email` = #{email}, </if>
-			<if test="phone != null">`phone` = #{phone}, </if>
-			<if test="mobile != null">`mobile` = #{mobile}, </if>
-			<if test="enabled != null">`enabled` = #{enabled}, </if>
-			<if test="remarks != null">`remarks` = #{remarks}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="opTime != null">`op_time` = #{opTime}, </if>
-			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
-		</set>
-		where id = #{id}
-	</update>
-
-	
 	<!-- 保存用户信息 -->
     <update id="updateInfo">
         UPDATE sys_user
@@ -119,6 +48,9 @@
             email = #{email},
             phone = #{phone},
             mobile = #{mobile},
+            avatar = #{avatar},
+            nick = #{nick},
+            sign = #{sign},
             op_time = #{opTime},
             remarks = #{remarks}
         </set>
@@ -130,13 +62,6 @@
         UPDATE sys_user
         SET
             password = #{password}
-        WHERE id = #{id}
-    </update>
-
-    <!-- 删除用户 -->
-    <update id="deleteById">
-        UPDATE sys_user
-        SET del_flag = '1'
         WHERE id = #{id}
     </update>
 

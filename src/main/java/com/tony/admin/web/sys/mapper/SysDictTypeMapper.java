@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.tony.admin.web.common.dao.CrudDao;
 import com.tony.admin.web.sys.model.DictInfo;
 import com.tony.admin.web.sys.model.SysDictEntry;
 import com.tony.admin.web.sys.model.SysDictType;
@@ -19,7 +18,7 @@ import com.tony.admin.web.sys.model.SysDictType;
  *
  */
 @Mapper
-public interface SysDictTypeMapper extends CrudDao<SysDictType> {
+public interface SysDictTypeMapper extends tk.mybatis.mapper.common.Mapper<SysDictType> {
 	
 	/**
 	 * 根据字典id查询业务字典信息

@@ -17,6 +17,7 @@ import com.tony.admin.web.sys.vo.RightTreeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ import java.util.Map;
  *
  * @author Guoqing
  */
-@Service
+@Service("systemServiceImpl")
 public class SystemServiceImpl implements ISystemService {
 
     /**
@@ -66,11 +67,12 @@ public class SystemServiceImpl implements ISystemService {
         List<SysMenu> menuList;
         //超级管理员
         if (SysUser.ADMIN_USER_ID.equals(userId)) {
-            menuList = sysMenuMapper.findAllList();
+            Example example = new Example(SysMenu.class);
+            example.createCriteria().andEqualTo("delFlag", "0");
+            menuList = sysMenuMapper.selectByExample(example);
         } else {
             menuList = sysMenuMapper.findListByUserId(userId);
         }
-
         user.setMenus(menuList);
         return user;
     }
@@ -79,17 +81,26 @@ public class SystemServiceImpl implements ISystemService {
     public PageInfo<SysUser> findUserPage(Paging page, SysUser user) {
         // 执行分页查询
         PageHelper.startPage(page.getPageNum(), page.getPageSize(), page.getOrderBy());
-        List<SysUser> list = sysUserMapper.findList(user);
+        Example example = new Example(SysUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotEmpty(user.getLoginName())){
+            criteria.andLike("loginName", user.getLoginName());
+        }
+        if(StringUtils.isNotEmpty(user.getName())){
+            criteria.andLike("name", user.getName());
+        }
+        example.orderBy("id").desc();
+        List<SysUser> list = sysUserMapper.selectByExample(example);
         return new PageInfo<>(list);
     }
 
     @Override
     public SysUser getUserById(Integer userId) {
-        SysUser user = sysUserMapper.get(Long.parseLong(userId.toString()));
+        SysUser user = sysUserMapper.selectByPrimaryKey(Long.parseLong(userId.toString()));
         if (user != null) {
             user.setRoles(sysRoleMapper.findListByUserId(userId));
         }
-        return sysUserMapper.get(Long.parseLong(userId.toString()));
+        return user;
     }
 
     @Override
@@ -97,13 +108,13 @@ public class SystemServiceImpl implements ISystemService {
         if ( user.getId() == null ) {
             user.setCreateTime(new Date());
             user.setOpTime(new Date());
+            user.setDelFlag("0");
             sysUserMapper.insert(user);
         } else {
             // 更新用户数据
         	user.setOpTime(new Date());
-            sysUserMapper.update(user);
+            sysUserMapper.updateByPrimaryKeySelective(user);
         }
-
         return user;
     }
 
@@ -116,16 +127,17 @@ public class SystemServiceImpl implements ISystemService {
 
     @Override
     public void deleteUserById(Integer userId) {
-        sysUserMapper.deleteById(Long.parseLong(userId.toString()));
         SysUser user = new SysUser();
         user.setId(userId);
+        user.setDelFlag("1");
+        user.setOpTime(new Date());
+        sysUserMapper.updateByPrimaryKeySelective(user);
         //删除用户对应的角色信息
         sysUserMapper.deleteUserRole(user);
     }
 
     @Override
     public void updateUserPasswordById(Integer userId, String newPassword) {
-
         SysUser user = new SysUser();
         user.setId(userId);
         user.setPassword(newPassword);
@@ -182,8 +194,10 @@ public class SystemServiceImpl implements ISystemService {
     public List<SysMenu> getMenuListByUserId(Integer userId) {
         List<SysMenu> menuList;
         //超级管理员
-        if ( SysUser.ADMIN_USER_ID == userId ) {
-            menuList = sysMenuMapper.findAllList();
+        if ( SysUser.ADMIN_USER_ID.equals(userId) ) {
+            Example example = new Example(SysMenu.class);
+            example.createCriteria().andEqualTo("delFlag", "0");
+            menuList = sysMenuMapper.selectByExample(example);
         } else {
             menuList = sysMenuMapper.findListByUserId(userId);
         }
@@ -211,7 +225,7 @@ public class SystemServiceImpl implements ISystemService {
             if (node.getShow() || !useShow) {
                 dtoMap.put(id, node);
             } else if (node.getParentId()!= null) {
-            	SysMenu parent = sysMenuMapper.get((long)node.getParentId());
+            	SysMenu parent = sysMenuMapper.selectByPrimaryKey((long)node.getParentId());
             	 if (parent.getShow()) {
                      dtoMap.put(id, parent);
                  }
@@ -236,11 +250,12 @@ public class SystemServiceImpl implements ISystemService {
             } else {
                 // 如果不是顶层节点，有父节点，然后添加到父节点的子节点中
                 SysMenu parent = dtoMap.get(node.getParentId().toString());
+                parent = tempMap.get(node.getParentId().toString());
                 /**
                  * 2019-01-14 解决父菜单未授权，子菜单授权时出现的父菜单未能从dtoMap中取出为null的问题
                  */
                 if( parent == null ) {
-                	parent = sysMenuMapper.get((long)node.getParentId());
+                	parent = sysMenuMapper.selectByPrimaryKey((long)node.getParentId());
                 }
             	if(parent != null ) {
                 	String parentId = parent.getId().toString();
@@ -283,12 +298,16 @@ public class SystemServiceImpl implements ISystemService {
 
     @Override
     public void deleteMenuById(Integer menuId) {
-        sysMenuMapper.deleteById(Long.parseLong(menuId.toString()));
+        SysMenu menu = new SysMenu();
+        menu.setId(menuId);
+        menu.setDelFlag("1");
+        menu.setOpTime(new Date());
+        sysMenuMapper.updateByPrimaryKeySelective(menu);
     }
 
     @Override
     public SysMenu getMenuById(Integer menuId) {
-        return sysMenuMapper.get(Long.parseLong(menuId.toString()));
+        return sysMenuMapper.selectByPrimaryKey(menuId.toString());
     }
 
     @Override
@@ -306,6 +325,7 @@ public class SystemServiceImpl implements ISystemService {
     			//新增顶级菜单
     			menu.setCreateTime(new Date());
     			menu.setOpTime(new Date());
+    			menu.setDelFlag("0");
     			sysMenuMapper.insert(menu);
     		}else{
     			//新增非顶级菜单
@@ -316,16 +336,17 @@ public class SystemServiceImpl implements ISystemService {
     			menu.setParentIds(parentIds);
     			menu.setCreateTime(new Date());
     			menu.setOpTime(new Date());
+    			menu.setDelFlag("0");
     			sysMenuMapper.insert(menu);
     		}
     	}else{
 			//编辑顶级菜单
     		//编辑非顶级菜单
 			menu.setOpTime(new Date());
-			if( menu.getParentId() == 0) {
+			if( menu.getParentId() == null || menu.getParentId() == 0) {
 				menu.setParentId(null);
 			}
-			sysMenuMapper.update(menu);
+			sysMenuMapper.updateByPrimaryKeySelective(menu);
     	}
         return menu;
     }
@@ -336,23 +357,36 @@ public class SystemServiceImpl implements ISystemService {
     public PageInfo<SysRole> findRolePage(Paging page, SysRole role) {
         // 执行分页查询
         PageHelper.startPage(page.getPageNum(), page.getPageSize(), page.getOrderBy());
-        List<SysRole> list = sysRoleMapper.findList(role);
+        Example example = new Example(SysRole.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotEmpty(role.getCode())){
+            criteria.andLike("code",role.getCode());
+        }
+        if(StringUtils.isNotEmpty(role.getName())){
+            criteria.andLike("name", role.getName());
+        }
+        if(StringUtils.isNotEmpty(role.getRemarks())){
+            criteria.andLike("remarks", role.getRemarks());
+        }
+        example.orderBy("createTime").desc();
+        List<SysRole> list = sysRoleMapper.selectByExample(example);
         return new PageInfo<>(list);
     }
 
     @Override
     public List<SysRole> findAllRoleList() {
-        return sysRoleMapper.findAllList();
+        Example example = new Example(SysRole.class);
+        example.createCriteria().andEqualTo("delFlag", "0");
+        example.orderBy("createTime").desc();
+        return sysRoleMapper.selectByExample(example);
     }
 
     @Override
     public SysRole getRoleById(Integer roleId) {
-
-        SysRole role = sysRoleMapper.get(Long.parseLong(roleId.toString()));
+        SysRole role = sysRoleMapper.selectByPrimaryKey(roleId.toString());
         if (role != null) {
             role.setMenus(sysMenuMapper.findListByRoleId(roleId));
         }
-
         return role;
     }
 
@@ -362,11 +396,12 @@ public class SystemServiceImpl implements ISystemService {
         if ( role.getId() == null ) {
             role.setCreateTime(new Date());
             role.setOpTime(new Date());
+            role.setDelFlag("0");
             sysRoleMapper.insert(role);
         } else {
             // 更新角色数据
         	role.setOpTime(new Date());
-            sysRoleMapper.update(role);
+            sysRoleMapper.updateByPrimaryKeySelective(role);
             sysRoleMapper.deleteRoleMenu(role);
         }
 
@@ -380,17 +415,21 @@ public class SystemServiceImpl implements ISystemService {
 
     @Override
     public void deleteRoleById(Integer roleId) {
-        sysRoleMapper.deleteById(Long.parseLong(roleId.toString()));
+        SysRole role = new SysRole();
+        role.setId(roleId);
+        role.setDelFlag("1");
+        role.setOpTime(new Date());
+        sysRoleMapper.updateByPrimaryKeySelective(role);
     }
 
 	@Override
 	public List<SysRole> getAuthList(int userId) {
-		return sysUserMapper.getAuthList(userId);
+        return sysUserMapper.getAuthList(userId);
 	}
 
 	@Override
 	public List<SysRole> getUnAuthList(int userId) {
-		return sysUserMapper.getUnAuthList(userId);
+        return sysUserMapper.getUnAuthList(userId);
 	}
 
 	@Override
@@ -401,7 +440,6 @@ public class SystemServiceImpl implements ISystemService {
 			params.put("roleId", role.getId());
 			sysUserMapper.addAuthInfo(params);
 		}
-		
 	}
 
 	@Override

@@ -1,19 +1,16 @@
 package com.tony.admin.web.sys.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-
-import com.tony.admin.web.common.dao.CrudDao;
 import com.tony.admin.web.sys.model.SysRole;
-
 import java.util.List;
 
 /**
  * 角色DAO接口
  *
- * @author mij
+ * @author Guoqing
  */
 @Mapper
-public interface SysRoleMapper extends CrudDao<SysRole> {
+public interface SysRoleMapper extends tk.mybatis.mapper.common.Mapper<SysRole> {
 
     /**
      * 查询用户角色列表

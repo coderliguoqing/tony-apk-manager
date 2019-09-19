@@ -1,15 +1,13 @@
 package com.tony.admin.web.im.server;
 
+import com.tony.admin.web.im.handler.ImWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.tony.admin.web.im.NettyServer;
-import com.tony.admin.web.im.codec.MessageDecoder;
-import com.tony.admin.web.im.codec.MessageEncoder;
 import com.tony.admin.web.im.constant.Constants;
-import com.tony.admin.web.im.model.proto.MessageModel;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -21,9 +19,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
@@ -33,14 +28,12 @@ import io.netty.handler.timeout.IdleStateHandler;
  * @date 2019年6月19日 上午11:52:10
  *
  */
-@Component("iMwebSocketServer")
+@Component("imWebSocketServer")
 public class ImWebSocketServer implements NettyServer {
 	
 	private Logger logger = LoggerFactory.getLogger(ImWebSocketServer.class);
-	
-	private ProtobufDecoder decoder = new ProtobufDecoder(MessageModel.Message.getDefaultInstance());
-	
-	@Value("${server.websocket.port}")
+
+	@Value("${netty.websocket.port}")
 	private int port;
 	
 	private final EventLoopGroup boosGroup = new NioEventLoopGroup();
@@ -71,18 +64,19 @@ public class ImWebSocketServer implements NettyServer {
 					// 把多个消息转换为一个单一的FullHttpRequest或是FullHttpResponse，
 		            // 原因是HTTP解码器会在每个HTTP消息中生成多个消息对象HttpRequest/HttpResponse,HttpContent,LastHttpContent
 					ch.pipeline().addLast(new HttpObjectAggregator(Constants.ImServerConfig.MAX_AGGREGATED_CONTENT_LENGTH));
-					 // WebSocket数据压缩
-		            ch.pipeline().addLast(new WebSocketServerCompressionHandler());
+					// WebSocket数据压缩
+		            //ch.pipeline().addLast(new WebSocketServerCompressionHandler());
 		            //协议包长度限制
-					ch.pipeline().addLast(new WebSocketServerProtocolHandler("/socket", null, true, Constants.ImServerConfig.MAX_FRAME_LENGTH));
+					//ch.pipeline().addLast(new WebSocketServerProtocolHandler("/socket", null, true, Constants.ImServerConfig.MAX_FRAME_LENGTH));
 					//协议包解码
-					ch.pipeline().addLast(new MessageDecoder());
+					//ch.pipeline().addLast(new MessageDecoder());
 					//协议包编码
-					ch.pipeline().addLast(new MessageEncoder());
+					//ch.pipeline().addLast(new MessageEncoder());
 					// 协议包解码时指定Protobuf字节数实例化为CommonProtocol类型
-		            ch.pipeline().addLast(decoder);
+		            //ch.pipeline().addLast(decoder);
 		            //心跳检测
 		            ch.pipeline().addLast(new IdleStateHandler(Constants.ImServerConfig.READ_IDLE_TIME,Constants.ImServerConfig.WRITE_IDLE_TIME,0));
+		            ch.pipeline().addLast(new ImWebSocketHandler());
 				}
 			});
 			logger.info("Starting ImWebSocketServer... Port:" + port);

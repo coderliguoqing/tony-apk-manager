@@ -14,57 +14,6 @@
   	select id, dicttype_id, dicttype_name, create_time, op_time, del_flag from sys_dict_type
   </sql>
   
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from sys_dict_type
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
-  
-  <insert id="insert" parameterType="com.tony.admin.web.sys.model.SysDictType">
-    insert into sys_dict_type (id, dicttype_id, dicttype_name, 
-      create_time, op_time, del_flag
-      )
-    values (#{id,jdbcType=VARCHAR}, #{dicttypeId,jdbcType=VARCHAR}, #{dicttypeName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{opTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
-      )
-  </insert>
-  
-  <update id="update" parameterType="com.tony.admin.web.sys.model.SysDictType">
-    update sys_dict_type
-    set dicttype_id = #{dicttypeId,jdbcType=VARCHAR},
-      dicttype_name = #{dicttypeName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      op_time = #{opTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=CHAR}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    <include refid="selectColumns"/>
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  
-  <select id="findList" resultMap="BaseResultMap">
-    <include refid="selectColumns"/>
-    WHERE del_flag = '0'
-    <if test="dicttypeId != null and dicttypeId != ''">
-        AND dicttype_id like CONCAT('%', #{dicttypeId}, '%')
-    </if>
-    <if test="dicttypeName != null and dicttypeName != ''">
-        AND dicttype_name like CONCAT('%', #{dicttypeName}, '%')
-    </if>
-    ORDER BY create_time
-  </select>
-  
-  <select id="findAllList" resultMap="BaseResultMap">
-    <include refid="selectColumns"/>
-        WHERE a.del_flag = '0'
-        ORDER BY a.create_time
-  </select>
-  
-  <update id="deleteById">
-    update sys_dict_type set del_flag = '1' where id =  #{id,jdbcType=VARCHAR}
-  </update>
-  
   <select id="getDictInfoByTypeId" parameterType="java.util.HashMap" resultType="com.tony.admin.web.sys.model.DictInfo">
     SELECT
 		sde.dict_id AS dictId,

@@ -1,24 +1,17 @@
 package com.tony.admin.web.common.log;
 
 import java.util.Arrays;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.alibaba.fastjson.JSON;
-
 
 /**
  * 统一日志处理
@@ -30,10 +23,8 @@ import com.alibaba.fastjson.JSON;
 @Component
 @Order(1)
 public class LogAspect {
-	
+
 	private Logger logger = LoggerFactory.getLogger(LogAspect.class);
-	
-	private static ThreadLocal<Long> startTime = new ThreadLocal<Long>();
 	
 	@Pointcut("execution(public * com.tony.admin.web.*.controller.*.*(..))")
 	public void logPointCut() {}
@@ -44,24 +35,27 @@ public class LogAspect {
 	 */
 	@Before("logPointCut()")
 	public void doBefore(JoinPoint joinPoint) {
-		startTime.set(System.currentTimeMillis());
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-	    HttpServletRequest request = requestAttributes.getRequest();
-	    String url = request.getRequestURL().toString();
-	    String httpMethod = request.getMethod();
-	    String ip = getIpAddr(request);
-	    String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "."+ joinPoint.getSignature().getName();
-	    String parameters = Arrays.toString(joinPoint.getArgs());
-	    logger.info("REQUEST URL:" + url + " | HTTP METHOD: " + httpMethod + " | IP: " + ip + " | CLASS_METHOD: " + classMethod
-	    		+ " | ARGS:" + parameters);
 	}
 
 	/**
 	 * 在切点后，return前执行
 	 * @param joinPoint
 	 */
-	@After("logPointCut()")
-	public void doAfter(JoinPoint joinPoint) {}
+	@Around("logPointCut()")
+	public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable{
+		long startTime = System.currentTimeMillis();
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = requestAttributes.getRequest();
+		Object result = joinPoint.proceed();
+		String url = request.getRequestURL().toString();
+		String httpMethod = request.getMethod();
+		String ip = getIpAddr(request);
+		String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "."+ joinPoint.getSignature().getName();
+		String parameters = Arrays.toString(joinPoint.getArgs());
+		logger.info("REQUEST URL:" + url + " | HTTP METHOD: " + httpMethod + " | IP: " + ip + " | CLASS_METHOD: " + classMethod
+				+ " | ARGS:" + parameters + " | RESPONSE TIME:" + (System.currentTimeMillis() - startTime) + "ms");
+		return result;
+	}
 	
 	/**
 	 * 在切入点，return后执行，如果相对某些方法的返回参数进行处理，可以在此处执行
@@ -69,8 +63,7 @@ public class LogAspect {
 	 */
 	@AfterReturning(returning = "object",pointcut = "logPointCut()")
     public void doAfterReturning(Object object){
-		logger.info("RESPONSE TIME: "+ (System.currentTimeMillis() - startTime.get()) + "ms");
-		logger.info("RESPONSE BODY: "+ JSON.toJSON(object));
+
     }
 
 	/**

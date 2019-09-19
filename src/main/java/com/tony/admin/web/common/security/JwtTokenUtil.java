@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tony.admin.web.common.security.model.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.gson.Gson;
@@ -15,6 +17,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 /**
  * jwt token 工具类
@@ -30,9 +33,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * @Date 2018-01-12
  *
  */
+@Component
 public abstract class JwtTokenUtil {
-	
+
     public static final String TOKEN_TYPE_BEARER = "Bearer";
+
+    public static final String USER_AUTH_TOKEN = "_user_auth_token_";
+
+    public static final String USER_AUTH_INFO = "_user_auth_info_";
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     private String header = "Authorization";
 
@@ -119,7 +130,7 @@ public abstract class JwtTokenUtil {
 	public Boolean isTokenExpired(String token){
 		final Date expriation = getExpirationDateFromToken(token);
 		String userName = getUsernameFromToken(token);
-		String redisToken = redisRepository.get("user_auth_token_"+userName);
+		String redisToken = redisRepository.get(appName + USER_AUTH_TOKEN +userName);
 		return expriation.before(new Date()) && token.equals(redisToken);
 	}
 	
@@ -134,7 +145,6 @@ public abstract class JwtTokenUtil {
 	
 	/**
 	 * 生成token（通过用户名和签名时候用的随机数）
-	 * @param userName
 	 * @param randomKey
 	 * @return
 	 */
@@ -143,15 +153,14 @@ public abstract class JwtTokenUtil {
 		claims.put(md5Key, randomKey);
 		String token = doGenerateToken(claims, userDetails);
 		//将生成的token存入redis做唯一性校验
-		redisRepository.setExpire("user_auth_token_"+userDetails.getUsername(), token, expiration);
-		redisRepository.setExpire("user_auth_info_"+userDetails.getUsername(), new Gson().toJson(userDetails), expiration );
+		redisRepository.setExpire(appName + USER_AUTH_TOKEN + userDetails.getUsername(), token, expiration);
+		redisRepository.setExpire(appName + USER_AUTH_INFO + userDetails.getUsername(), new Gson().toJson(userDetails), expiration );
 		return token;
 	}
 	
 	/**
 	 * 生成token
 	 * @param claims
-	 * @param subject
 	 * @return
 	 */
 	private String doGenerateToken(Map<String, Object> claims, UserDetails userDetails){
@@ -181,8 +190,8 @@ public abstract class JwtTokenUtil {
 	 */
 	public void deleteToken(String token){
 		String userName = getUsernameFromToken(token);
-		redisRepository.del("user_auth_token_"+userName);
-		redisRepository.del("user_auth_info_"+userName);
+		redisRepository.del(appName + USER_AUTH_INFO + userName);
+		redisRepository.del(appName + USER_AUTH_INFO + userName);
 	}
 	
 	/**
@@ -235,7 +244,18 @@ public abstract class JwtTokenUtil {
 	public static String getTokenTypeBearer() {
 		return TOKEN_TYPE_BEARER;
 	}
-	
-	
+
+	/**
+	 * 验证令牌
+	 *
+	 * @param token       令牌
+	 * @param userDetails 用户
+	 * @return 是否有效
+	 */
+	public Boolean validateToken(String token, UserDetails userDetails) {
+		AuthUser user = (AuthUser) userDetails;
+		String username = getUsernameFromToken(token);
+		return (username.equals(user.getUsername()) && !isTokenExpired(token));
+	}
 	
 }
